@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>헬렌 피셔 기질 테스트</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --d: #6C5CE7; --d-light: #EDE8FF; --d-mid: #A29BFE;
+    --s: #00B894; --s-light: #D4F5EC; --s-mid: #55EFC4;
+    --t: #E17055; --t-light: #FDEBD6; --t-mid: #FAB1A0;
+    --e: #E84393; --e-light: #FDE8F3; --e-mid: #FD79A8;
+    --bg: #FAFAF8; --surface: #FFFFFF;
+    --text: #1a1a1a; --text-muted: #6b6b6b; --border: #e8e8e4;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Gowun Dodum', sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+  .container { width: 100%; max-width: 580px; }
+
+  /* INTRO */
+  .intro-header { text-align: center; margin-bottom: 1.5rem; padding-top: 1rem; }
+  .eyebrow { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+  .intro-header h1 { font-family: 'Nanum Myeongjo', serif; font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: .75rem; }
+  .intro-header p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+  .start-btn {
+    width: 100%; padding: 16px;
+    background: var(--text); color: var(--bg);
+    border: none; border-radius: var(--radius);
+    font-family: 'Gowun Dodum', sans-serif; font-size: 15px;
+    cursor: pointer; letter-spacing: .02em;
+    transition: opacity .2s, transform .15s;
+    margin-bottom: 1.25rem;
+  }
+  .start-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+  .type-strip { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+  .type-chip {
+    padding: 8px 6px; border-radius: 8px; border: 1px solid;
+    text-align: center; pointer-events: none;
+  }
+  .type-chip .chem { font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .65; margin-bottom: 2px; }
+  .type-chip .kor { font-size: 11px; font-weight: 700; }
+  .type-chip .role { font-size: 9.5px; opacity: .55; margin-top: 1px; }
+  .chip-D { background: var(--d-light); border-color: var(--d-mid); color: #3d3080; }
+  .chip-S { background: var(--s-light); border-color: var(--s-mid); color: #006652; }
+  .chip-T { background: var(--t-light); border-color: var(--t-mid); color: #8b3a26; }
+  .chip-E { background: var(--e-light); border-color: var(--e-mid); color: #8b1655; }
+
+  /* PROGRESS */
+  .progress-area { margin-bottom: 1.75rem; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .progress-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-bar { height: 4px; background: var(--text); border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+
+  /* QUESTION */
+  .q-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.25rem;
+    animation: fadeUp .22s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .q-text { font-family: 'Nanum Myeongjo', serif; font-size: 17px; line-height: 1.65; color: var(--text); margin-bottom: 1.5rem; }
+  .likert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lbtn {
+    padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--bg); cursor: pointer;
+    font-family: 'Gowun Dodum', sans-serif; font-size: 13px;
+    color: var(--text-muted); text-align: center; transition: all .12s;
+  }
+  .lbtn:hover { border-color: #aaa; color: var(--text); background: #f0f0ed; }
+  .lbtn.chosen { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 700; }
+
+  /* RESULT */
+  .result-header { text-align: center; margin-bottom: 2rem; padding-top: .5rem; }
+  .result-header h2 { font-family: 'Nanum Myeongjo', serif; font-size: 24px; font-weight: 700; }
+  .result-card { border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; border: 1px solid transparent; }
+  .result-card.main-card { border-width: 2px; }
+  .result-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em; padding: 3px 10px; border-radius: 99px; margin-bottom: 10px; }
+  .result-type-name { font-family: 'Nanum Myeongjo', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .result-desc { font-size: 13.5px; line-height: 1.75; margin-bottom: 1rem; }
+  .traits-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+  .trait { font-size: 12px; padding: 4px 11px; border-radius: 99px; }
+  .rc-D { background: var(--d-light); border-color: var(--d); color: #3d3080; }
+  .rc-S { background: var(--s-light); border-color: var(--s); color: #006652; }
+  .rc-T { background: var(--t-light); border-color: var(--t); color: #8b3a26; }
+  .rc-E { background: var(--e-light); border-color: var(--e); color: #8b1655; }
+
+  .score-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
+  .score-section h3 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+  .score-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .score-row:last-child { margin-bottom: 0; }
+  .score-label { font-size: 12px; min-width: 90px; font-weight: 700; }
+  .score-track { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .score-fill { height: 6px; border-radius: 99px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .score-num { font-size: 12px; font-weight: 700; min-width: 28px; text-align: right; }
+
+  .combo-note { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; font-size: 13px; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.25rem; }
+  .combo-note strong { color: var(--text); }
+
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .action-full { margin-top: 8px; }
+  .abtn {
+    padding: 13px 16px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); font-family: 'Gowun Dodum', sans-serif;
+    font-size: 13px; color: var(--text-muted); cursor: pointer;
+    transition: all .15s; text-align: center; text-decoration: none;
+    display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%;
+  }
+  .abtn:hover { border-color: #aaa; color: var(--text); }
+  .abtn.dark { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 700; }
+  .abtn.dark:hover { opacity: .85; color: var(--bg); }
+  .abtn.yt { background: #e60000; color: #fff; border-color: #e60000; font-weight: 700; }
+  .abtn.yt:hover { background: #b30000; border-color: #b30000; color: #fff; }
+
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1a1a1a; color: #fff; font-size: 13px;
+    padding: 10px 20px; border-radius: 99px;
+    opacity: 0; transition: all .3s; pointer-events: none; white-space: nowrap; z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .hidden { display: none; }
+
+  @media (max-width: 400px) {
+    .type-strip { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div id="sec-intro">
+    <div class="intro-header">
+      <div class="eyebrow">Helen Fisher · 기질 유형 검사</div>
+      <h1>나의 기질은<br>무엇일까요?</h1>
+      <p>뇌 화학물질에 기반한 4가지 기질 유형 중<br>나의 주기질과 부기질을 알아보세요</p>
+    </div>
+    <button class="start-btn" onclick="startTest()">테스트 시작하기 →</button>
+    <div class="type-strip">
+      <div class="type-chip chip-D"><div class="chem">Dopamine</div><div class="kor">도파민형</div><div class="role">탐험가</div></div>
+      <div class="type-chip chip-S"><div class="chem">Serotonin</div><div class="kor">세로토닌형</div><div class="role">건축가</div></div>
+      <div class="type-chip chip-T"><div class="chem">Testosterone</div><div class="kor">테스토스테론형</div><div class="role">지휘관</div></div>
+      <div class="type-chip chip-E"><div class="chem">Estrogen</div><div class="kor">에스트로겐형</div><div class="role">외교관</div></div>
+    </div>
+  </div>
+
+  <div id="sec-test" class="hidden">
+    <div class="progress-area">
+      <div class="progress-info"><span id="q-count">1 / 36</span><span id="q-pct">0%</span></div>
+      <div class="progress-track"><div class="progress-bar" id="pbar" style="width:2%"></div></div>
+    </div>
+    <div id="q-area"></div>
+  </div>
+
+  <div id="sec-result" class="hidden"><div id="result-area"></div></div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var RAW=[
+  {t:'D',q:'새로운 경험과 모험을 적극적으로 찾는 편이다'},
+  {t:'D',q:'어떤 것이 어떻게 작동하는지 알고 싶은 호기심이 매우 강하다'},
+  {t:'D',q:'나는 자발적이고 충동적인 편이다'},
+  {t:'D',q:'독창적이고 창의적인 작업을 즐긴다'},
+  {t:'D',q:'변화와 다양성이 있는 환경에서 더 에너지가 넘친다'},
+  {t:'D',q:'생각이 여러 방향으로 뻗어나가며 연결 고리를 찾는 걸 즐긴다'},
+  {t:'D',q:'새로운 사람을 만나고 다양한 문화를 경험하는 것이 좋다'},
+  {t:'D',q:'규칙이나 틀에 얽매이는 것보다 자유로운 방식을 선호한다'},
+  {t:'D',q:'관심 분야가 넓고 많은 것에 호기심을 느낀다'},
+  {t:'S',q:'계획을 세우고 그것을 차례차례 실행하는 것을 좋아한다'},
+  {t:'S',q:'전통과 관습을 중요하게 생각한다'},
+  {t:'S',q:'규칙과 절차를 따르는 것이 편안하다'},
+  {t:'S',q:'나는 신중하고 책임감 있는 편이다'},
+  {t:'S',q:'안정적인 환경과 예측 가능한 일상을 선호한다'},
+  {t:'S',q:'내가 속한 집단(가족, 친구 등)에 대한 충성심이 강하다'},
+  {t:'S',q:'일을 처리할 때 체계적이고 꼼꼼하게 접근한다'},
+  {t:'S',q:'사회적 규범과 도덕적 원칙을 중요하게 여긴다'},
+  {t:'S',q:'믿을 수 있고 일관성 있는 사람이라는 말을 자주 듣는다'},
+  {t:'T',q:'논리적이고 분석적으로 문제를 해결하는 편이다'},
+  {t:'T',q:'경쟁을 즐기고 이기고 싶은 욕구가 있다'},
+  {t:'T',q:'감정보다는 사실과 데이터를 기반으로 결정한다'},
+  {t:'T',q:'어떤 일에서든 명확한 위계와 구조를 선호한다'},
+  {t:'T',q:'직설적으로 말하며, 돌려 말하는 것을 답답하게 느낀다'},
+  {t:'T',q:'복잡한 시스템이나 구조를 이해하는 것이 즐겁다'},
+  {t:'T',q:'목표를 달성하기 위해 집중력 있게 밀고 나간다'},
+  {t:'T',q:'다른 사람의 감정보다 객관적인 사실에 더 집중하는 경향이 있다'},
+  {t:'T',q:'전략적으로 생각하고 장기적인 결과를 고려하는 편이다'},
+  {t:'E',q:'다른 사람의 감정과 필요에 민감하게 반응한다'},
+  {t:'E',q:'사람들 간의 관계가 어떻게 연결되어 있는지 잘 파악한다'},
+  {t:'E',q:'상상력이 풍부하고 직관적으로 느끼는 편이다'},
+  {t:'E',q:'나는 감정 표현이 풍부하고 공감 능력이 뛰어나다'},
+  {t:'E',q:'갈등 상황에서 중재하거나 조화를 추구하는 역할을 맡는다'},
+  {t:'E',q:'사람들의 동기와 감정을 잘 읽어내는 편이다'},
+  {t:'E',q:'상대방의 입장에서 생각하고 감정이입이 잘 된다'},
+  {t:'E',q:'언어적 표현과 소통 능력이 뛰어나다는 말을 듣는다'},
+  {t:'E',q:'관계의 깊이와 정서적 친밀감을 중요하게 여긴다'}
+];
+var LS=['그런 편이다','매우 그렇다','아닌 편이다','전혀 아니다'];
+var SV={'전혀 아니다':0,'아닌 편이다':1,'그런 편이다':2,'매우 그렇다':3};
+var TI={
+  D:{name:'도파민형 — 탐험가',badge:'도파민 (Dopamine)',
+     desc:'새로운 경험을 갈망하고 호기심이 넘칩니다. 창의적이고 모험심이 강하며 변화를 즐기고 자발적으로 행동합니다. 아이디어가 풍부하고 다양한 관심사를 갖고 있으며, 자유로운 환경에서 진정한 능력을 발휘합니다.',
+     traits:['창의적','호기심 왕성','모험적','자발적','유연한 사고','변화 추구','독창적'],
+     cls:'rc-D',bar:'#6C5CE7'},
+  S:{name:'세로토닌형 — 건축가',badge:'세로토닌 (Serotonin)',
+     desc:'안정성과 질서를 중요하게 여기며 신뢰할 수 있는 사람입니다. 계획을 세우고 실행하는 데 탁월하며, 공동체와 전통에 강한 충성심을 가집니다. 책임감이 강하고 꼼꼼하게 일을 처리합니다.',
+     traits:['체계적','신뢰할 수 있는','책임감 강한','전통 중시','계획적','충성스러운','꼼꼼한'],
+     cls:'rc-S',bar:'#00B894'},
+  T:{name:'테스토스테론형 — 지휘관',badge:'테스토스테론 (Testosterone)',
+     desc:'논리적 사고와 분석력이 뛰어나며 목표 달성에 강한 드라이브를 가집니다. 직설적이고 결단력 있게 행동하며, 복잡한 시스템을 이해하고 전략적으로 사고하는 데 탁월합니다.',
+     traits:['분석적','결단력','경쟁심','직설적','전략적','목표 지향','논리적'],
+     cls:'rc-T',bar:'#E17055'},
+  E:{name:'에스트로겐형 — 외교관',badge:'에스트로겐 (Estrogen)',
+     desc:'공감 능력이 뛰어나고 인간관계에 민감합니다. 직관적으로 사람들의 감정과 동기를 읽어내며, 갈등 상황에서 조화를 이루는 역할을 맡습니다. 언어적 소통 능력이 뛰어나고 정서적 깊이를 추구합니다.',
+     traits:['공감 능력','직관적','소통 능력','관계 중심','감성적','조화 추구','따뜻한'],
+     cls:'rc-E',bar:'#E84393'}
+};
+var QS=[],cur=0,ans=[];
+var YT='https://youtube.com/@groovebymojo?si=Op9nO2qy_f3pQv8V';
+var SHARE_URL=window.location.href;
+
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=b[i];b[i]=b[j];b[j]=tmp;}return b;}
+
+function startTest(){
+  QS=shuffle(shuffle(RAW)); cur=0; ans=new Array(QS.length).fill(null);
+  document.getElementById('sec-intro').classList.add('hidden');
+  document.getElementById('sec-test').classList.remove('hidden');
+  render();
+}
+
+function render(){
+  var q=QS[cur];
+  var pct=Math.max(Math.round((cur/QS.length)*100),2);
+  document.getElementById('q-count').textContent=(cur+1)+' / '+QS.length;
+  document.getElementById('q-pct').textContent=pct+'%';
+  document.getElementById('pbar').style.width=pct+'%';
+  var sel=ans[cur];
+  var h='<div class="q-section"><p class="q-text">'+q.q+'</p><div class="likert-grid">';
+  LS.forEach(function(l){
+    var c=sel===l?' chosen':'';
+    h+='<button class="lbtn'+c+'" onclick="pick(this,\''+l.replace(/'/g,"\\'")+'\')" >'+l+'</button>';
+  });
+  h+='</div></div>';
+  document.getElementById('q-area').innerHTML=h;
+}
+
+function pick(btn,v){
+  ans[cur]=v;
+  // briefly show selection
+  var btns=document.querySelectorAll('.lbtn');
+  btns.forEach(function(b){b.classList.remove('chosen');});
+  btn.classList.add('chosen');
+  setTimeout(function(){
+    if(cur<QS.length-1){cur++;render();}
+    else{showResult();}
+  },220);
+}
+
+function showResult(){
+  var sc={D:0,S:0,T:0,E:0};
+  QS.forEach(function(q,i){if(ans[i]!=null)sc[q.t]+=SV[ans[i]];});
+  var sorted=Object.entries(sc).sort(function(a,b){return b[1]-a[1];});
+  var pr=sorted[0][0],se=sorted[1][0],pi=TI[pr],si=TI[se],max=27;
+  document.getElementById('sec-test').classList.add('hidden');
+  document.getElementById('sec-result').classList.remove('hidden');
+
+  var h='<div class="result-header"><div class="eyebrow">Your Result</div><h2>기질 유형이 나왔어요</h2></div>';
+  h+='<div class="result-card main-card '+pi.cls+'"><span class="result-tag">주기질</span><p class="result-type-name">'+pi.name+'</p><p class="result-desc">'+pi.desc+'</p><div class="traits-wrap">'+pi.traits.map(function(t){return'<span class="trait">'+t+'</span>';}).join('')+'</div></div>';
+  h+='<div class="result-card '+si.cls+'"><span class="result-tag">부기질</span><p class="result-type-name">'+si.name+'</p><p class="result-desc">'+si.desc+'</p><div class="traits-wrap">'+si.traits.map(function(t){return'<span class="trait">'+t+'</span>';}).join('')+'</div></div>';
+  h+='<div class="score-section"><h3>점수 분포</h3>';
+  sorted.forEach(function(e){var info=TI[e[0]];var pct=Math.round((e[1]/max)*100);
+    h+='<div class="score-row"><span class="score-label">'+info.badge+'</span><div class="score-track"><div class="score-fill" id="sf-'+e[0]+'" style="width:0;background:'+info.bar+'"></div></div><span class="score-num">'+e[1]+'점</span></div>';
+  });
+  h+='</div>';
+  h+='<div class="combo-note">주기질 <strong>'+pi.name+'</strong>과 부기질 <strong>'+si.name+'</strong>의 조합입니다. 두 기질이 어우러져 독특하고 풍부한 성향을 만들어냅니다.</div>';
+  h+='<div class="action-grid"><button class="abtn" onclick="restart()">↺ 다시 하기</button><button class="abtn dark" onclick="shareTest()">🔗 테스트 공유</button></div>';
+  h+='<div class="action-full"><a class="abtn yt" href="'+YT+'" target="_blank" rel="noopener">▶ 더 자세한 내용 보러가기</a></div>';
+
+  document.getElementById('result-area').innerHTML=h;
+  setTimeout(function(){
+    sorted.forEach(function(e){var el=document.getElementById('sf-'+e[0]);if(el){el.style.width=Math.round((e[1]/max)*100)+'%';}});
+  },100);
+}
+
+function shareTest(){
+  var url=SHARE_URL;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){toast('링크가 복사되었어요!');});
+  } else {
+    var ta=document.createElement('textarea');ta.value=url;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');toast('링크가 복사되었어요!');}catch(e){toast('직접 링크를 복사해주세요');}
+    document.body.removeChild(ta);
+  }
+}
+
+function toast(msg){
+  var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},2200);
+}
+
+function restart(){
+  cur=0;ans=[];
+  document.getElementById('sec-result').classList.add('hidden');
+  document.getElementById('sec-intro').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
