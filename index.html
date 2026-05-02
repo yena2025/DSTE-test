@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>헬렌 피셔 기질 테스트</title>
+<meta property="og:title" content="나의 기질은 무엇일까요? — 헬렌 피셔 기질 테스트">
+<meta property="og:description" content="도파민 · 세로토닌 · 테스토스테론 · 에스트로겐 — 4가지 뇌 화학물질로 알아보는 나의 주기질과 부기질">
+<meta property="og:image" content="https://og-image-generator.vercel.app/api/og?title=%EB%82%98%EC%9D%98+%EA%B8%B0%EC%A7%88%EC%9D%80+%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C%EC%9A%94%3F&description=%EB%8F%84%ED%8C%8C%EB%AF%BC+%C2%B7+%EC%84%B8%EB%A1%9C%ED%86%A0%EB%8B%8C+%C2%B7+%ED%85%8C%EC%8A%A4%ED%86%A0%EC%8A%A4%ED%85%8C%EB%A1%A0+%C2%B7+%EC%97%90%EC%8A%A4%ED%8A%B8%EB%A1%9C%EA%B2%90&theme=light">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="나의 기질은 무엇일까요? — 헬렌 피셔 기질 테스트">
+<meta name="twitter:description" content="도파민 · 세로토닌 · 테스토스테론 · 에스트로겐 — 4가지 뇌 화학물질로 알아보는 나의 주기질과 부기질">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -131,6 +138,16 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .hidden { display: none; }
 
+  .lbtn { -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; }
+  .lbtn:focus { outline: none; }
+
+  .made-by {
+    text-align: center; margin-top: 2rem; padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-muted); letter-spacing: 0.03em; line-height: 1.8;
+  }
+  .made-by strong { color: var(--text); }
+
   @media (max-width: 400px) {
     .type-strip { grid-template-columns: 1fr 1fr; }
   }
@@ -227,7 +244,7 @@ var TI={
      cls:'rc-E',bar:'#E84393'}
 };
 var QS=[],cur=0,ans=[];
-var YT='https://youtube.com/@groovebymojo?si=Op9nO2qy_f3pQv8V';
+var YT='https://youtu.be/8UVSEit500w';
 var SHARE_URL=window.location.href;
 
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=b[i];b[i]=b[j];b[j]=tmp;}return b;}
@@ -285,7 +302,8 @@ function showResult(){
   h+='</div>';
   h+='<div class="combo-note">주기질 <strong>'+pi.name+'</strong>과 부기질 <strong>'+si.name+'</strong>의 조합입니다. 두 기질이 어우러져 독특하고 풍부한 성향을 만들어냅니다.</div>';
   h+='<div class="action-grid"><button class="abtn" onclick="restart()">↺ 다시 하기</button><button class="abtn dark" onclick="shareTest()">🔗 테스트 공유</button></div>';
-  h+='<div class="action-full"><a class="abtn yt" href="'+YT+'" target="_blank" rel="noopener">▶ 더 자세한 내용 보러가기</a></div>';
+  h+='<div class="action-full"><a class="abtn yt" href="'+YT+'" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> 더 자세한 내용 보러가기</a></div>';
+  h+='<div class="made-by">made by <strong>관계의 그루브, MOJO</strong></div>';
 
   document.getElementById('result-area').innerHTML=h;
   setTimeout(function(){
